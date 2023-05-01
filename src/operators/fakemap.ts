@@ -53,8 +53,9 @@ Observable.prototype.fakemap = fakemap;
 // ********************** 分割线 *****************************
 
 // 这里（高阶函数）和上面的不同在于：
-// 使用 obs$ 取代了this,
-// 既保证函数式编程范式，又可以以参数的形式获取到context上下文（旧的Observable对象）
+// 使用 obs$ 取代了this, 保证函数式编程范式
+// 既可以以参数的形式获取到context上下文（旧的Observable对象），
+// 又利用这个参数对结果进行了处理
 function fakeMapPro<T, R>(project: (value: T) => R) {
     return function(obs$: Observable<T>) {
         return new Observable((observer: Subscriber<R>) => {

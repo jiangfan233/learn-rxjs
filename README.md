@@ -14,3 +14,6 @@ rxjs既实现了观察者模式又实现了迭代器模式；
 <li>数据源要求观察者（subscriber）必须实现next、complete、error中至少一个方法，从而保证数据流通；</li>
 <li>source$.subscribe(observer)观察者作为参数交给数据源，保证观察者“随时可用”</li>
 </ul>
+
+
+高阶函数可用来保存执行上下文context,从而摆脱this困扰,但也因此不能直接使用链式调用；
