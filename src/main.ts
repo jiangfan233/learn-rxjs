@@ -1,3 +1,5 @@
 // import "./summary"
 // import "./of-map"
-import "./operators/fakemap"
+// import "./operators/fakemap"
+// import "./static-operators/of-range-ganerate"
+import "./operators/repeat"
