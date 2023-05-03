@@ -42,15 +42,6 @@ const nextFunc = <T>(value: T, observer: Subscriber<T>, subscription: Subscripti
     }
 }
 
-const completeFunc = <T>(countdown: number, observer: Subscriber<T>, subscription: Subscription) => {
-    if(countdown === 0) {
-        observer.complete();
-        subscription.unsubscribe();
-    }
-    observer.unsubscribe();
-    
-}
-
 function fakeRepeat<T>(this: Observable<T>, countdown: number) {
     let subscription: Subscription;
 
