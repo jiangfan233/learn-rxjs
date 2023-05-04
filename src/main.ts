@@ -5,4 +5,7 @@
 // import "./operators/repeat"
 // import "./static-operators/interval-timer";
 // import "./static-operators/from";
-import "./static-operators/fromPromise";
+// import "./static-operators/fromPromise";
+// import "./static-operators/fromEvent";
+// import "./static-operators/ajax";
+import "./static-operators/repeatWhen";

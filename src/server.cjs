@@ -1,0 +1,1 @@
+require("./static-operators/fromEvent-1.cjs");
