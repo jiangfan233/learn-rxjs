@@ -27,8 +27,11 @@ const source$ = Observable.create((observer: Subscriber<string>) => {
 
 const notifier = <T>(notification$: Observable<T>): Observable<T> => {
     // @ts-ignore
-    return interval(2000);
-    // return notification$.delay(3000);
+    // return interval(2000);
+    let count = 0;
+    return notification$.pipe(
+        delay(1000)
+    ).takeWhile((val, index) => count++ < 3);
 }
 
 // source$.pipe(
@@ -63,9 +66,10 @@ function fakeRepeatWhen<T>(fn: Fn) {
                     sub.unsubscribe();
                 },
                 () => {
-                    // 
+                    // 这里只退订上游，repeat的工作交给controller$执行
                     // observer.complete();
                     subscription && subscription.unsubscribe();
+                    subscribeContoller();
                 }
             )
 
@@ -76,20 +80,29 @@ function fakeRepeatWhen<T>(fn: Fn) {
             }
         };
 
-        const errorFunc = <T>(observer: Subscriber<T>) => observer.error; 
-
-        const completeFunc = <T>(observer: Subscriber<T>) => () => {
+        const completeFunc = () => {
             sub && sub.unsubscribe();
-            controller$.subscribe(nextFunc, errorFunc, completeFunc(observer));
+            // observer.complete();
+            subscribeContoller();
         }
 
         nextFunc();
 
-        sub = controller$.subscribe(
-            nextFunc,
-            errorFunc(observer),
-            completeFunc(observer)
-        )
+        // 期望：
+        // 1、controller$数据流complete的时候能够下游也能正常结束，
+        // 2、controller$数据流complete的时候能够在重新订阅自身
+        
+        // 实际：
+        // controller$数据流只是不再产生数据，不再调用nextFunc了
+        // 实际上当controller$数据流complete的时候，并没有调用observer.complete
+        // 即下游并没有被通知到。
+        function subscribeContoller() {
+            sub = controller$.subscribe(
+                nextFunc,
+                observer.error,
+                completeFunc
+            )
+        }
 
         return {
             unsubscribe() {
@@ -107,5 +120,7 @@ app?.appendChild(button);
 
 source$.pipe(
     // repeatWhen(() => fromEvent(button, "click"))
-    fakeRepeatWhen(() => fromEvent(button, "click"))
-).subscribe(console.log)
+    // fakeRepeatWhen(() => fromEvent(button, "click").take(3))
+    fakeRepeatWhen(notifier)
+    // repeatWhen(notifier)
+).subscribe(console.log, console.error, () => console.log("done"));
