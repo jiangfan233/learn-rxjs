@@ -48,7 +48,7 @@ const notifier = <T>(notification$: Observable<T>): Observable<T> => {
 
 type Fn = <T>(obs$: Observable<T>) => Observable<T>;
 
-function fakeRepeatWhen<T>(fn: Fn) {
+export function fakeRepeatWhen<T>(fn: Fn) {
     const controller$ = fn(of(1));
 
     // fakeRepeatWhen 是一个高阶函数，
@@ -111,6 +111,12 @@ function fakeRepeatWhen<T>(fn: Fn) {
         // 如果该Observable 已经没有数据，会直接调用 observer.complete
         // 所以只需要维护一个根据 observer.next 是否调用的来改变状态的状态变量即可
         // 该变量同时也表示Observable是否已经complete
+
+        // 上述方法缺陷：
+        // 如果fakeRepeatWhen(notifier)中notifier返回一个cold Observable，
+        // 该Observable在每次调用完observer.next 之后调用 observer.complete，
+        // 又会导致 controller$ 重新订阅 => 无限循环
+        // 关键在于如何知道controller$ 什么时候应该重新订阅，什么时候应该调用observer.complete
         function subscribeContoller() {
             sub = controller$.subscribe(
                 nextFunc,

@@ -39,5 +39,11 @@ rxjs既实现了观察者模式又实现了迭代器模式；
         所以只需要维护一个根据 observer.next 是否调用的来改变状态的状态变量即可<br/>
         该变量同时也表示Observable是否已经complete
     </li>
-
+    <li>
+        上述方法缺陷：<br/>
+        如果fakeRepeatWhen(notifier)中notifier返回一个cold Observable，
+        该Observable在每次调用完observer.next 之后调用 observer.complete，
+        又会导致 controller$ 重新订阅 => 无限循环;<br/>
+        关键在于如何知道controller$ 什么时候应该重新订阅，什么时候应该调用observer.complete
+    </li>
 </ul>
