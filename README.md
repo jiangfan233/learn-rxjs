@@ -18,4 +18,26 @@ rxjs既实现了观察者模式又实现了迭代器模式；
 
 高阶函数可用来保存执行上下文context,从而摆脱this困扰,但也因此不能直接使用链式调用；
 
-repeatWhen 有问题待解决，
+关于 fakeRepeatWhen(repeatWhen) 的问题：
+<ul>
+    <li>
+        期望：</br>
+        1、controller$数据流complete的时候能够下游也能正常结束，<br/>
+        2、controller$数据流complete的时候能够在重新订阅自身
+    </li>
+    <li>
+        实际：<br/>
+        1、controller$数据流只是不再产生数据，不再调用nextFunc了<br/>
+        2、实际上当controller$数据流complete的时候，并没有调用observer.complete,即下游并没有被通知到。</br>
+        3、而且因为递归中缺少判断条件，会导致无限循环
+    </li>
+    <li>
+        解决方法：<br/>
+        当一个Observable 还有数据产生时，会先调用observer.next，
+        然后在某一个时刻调用 observer.complete<br/>
+        如果该Observable 已经没有数据，会直接调用 observer.complete<br/>
+        所以只需要维护一个根据 observer.next 是否调用的来改变状态的状态变量即可<br/>
+        该变量同时也表示Observable是否已经complete
+    </li>
+
+</ul>

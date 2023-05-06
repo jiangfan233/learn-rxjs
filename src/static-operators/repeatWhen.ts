@@ -4,6 +4,7 @@ import { delay, repeatWhen } from "rxjs/operators";
 import { Observable, Subscriber, Subscription } from "rxjs";
 import { empty } from "rxjs/observable/empty";
 import { fromEvent } from "rxjs/observable/fromEvent";
+import { never } from "rxjs/observable/never";
 
 
 // of(1).pipe(
@@ -55,8 +56,11 @@ function fakeRepeatWhen<T>(fn: Fn) {
     return (obs$: Observable<T>) => Observable.create((observer: Subscriber<T>) => {
         let subscription: Subscription;
         let sub: Subscription;
+        // 表示该 controller$ 是否还有数据（还未complete）
+        let controllerHaveData = false;
 
         const nextFunc = () => {
+            controllerHaveData = true;
             // console.log("nextDunc")
             subscription = obs$.subscribe(
                 (value: T) => observer.next(value),
@@ -82,8 +86,12 @@ function fakeRepeatWhen<T>(fn: Fn) {
 
         const completeFunc = () => {
             sub && sub.unsubscribe();
-            // observer.complete();
-            subscribeContoller();
+            if(controllerHaveData) {
+                subscribeContoller();
+                controllerHaveData = false;
+            } else {
+                observer.complete();
+            }
         }
 
         nextFunc();
@@ -96,6 +104,13 @@ function fakeRepeatWhen<T>(fn: Fn) {
         // controller$数据流只是不再产生数据，不再调用nextFunc了
         // 实际上当controller$数据流complete的时候，并没有调用observer.complete
         // 即下游并没有被通知到。
+        
+        // 解决方法：
+        // 当一个Observable 还有数据产生时，会先调用observer.next，
+        // 然后在某一个时刻调用 observer.complete
+        // 如果该Observable 已经没有数据，会直接调用 observer.complete
+        // 所以只需要维护一个根据 observer.next 是否调用的来改变状态的状态变量即可
+        // 该变量同时也表示Observable是否已经complete
         function subscribeContoller() {
             sub = controller$.subscribe(
                 nextFunc,
