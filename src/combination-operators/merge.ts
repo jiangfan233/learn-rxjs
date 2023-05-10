@@ -6,6 +6,7 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/take";
 import { Observable, Subscriber, Subscription } from "rxjs";
 import { interval } from "rxjs/observable/interval";
+import { fromEvent } from "rxjs/observable/fromEvent";
 
 
 const fakeMerge = (...rest: any[]) => {
@@ -63,15 +64,29 @@ const fakeMerge = (...rest: any[]) => {
 }
 
 
-const source1$ = timer(0, 1000).map(x => x + "A").take(2);
-const source2$ = timer(500, 1000).map(x => x + "B").take(3);
+// const source1$ = timer(0, 1000).map(x => x + "A").take(2);
+// const source2$ = timer(500, 1000).map(x => x + "B").take(3);
 
-// concurrent===2：只有当前两个数据源完结的时候第三个才有机会入场
-// const source3$ = merge(source1$, source2$, interval(1000), 2);
-const source3$ = fakeMerge(source1$, source2$, interval(1000), 2);
+// // concurrent===2：只有当前两个数据源完结的时候第三个才有机会入场
+// // const source3$ = merge(source1$, source2$, interval(1000), 2);
+// const source3$ = fakeMerge(source1$, source2$, interval(1000), 2);
 
-source3$.take(10).subscribe(
-    console.log,
-    console.error,
-    () => console.log("done")
-)
+// source3$.take(10).subscribe(
+//     console.log,
+//     console.error,
+//     () => console.log("done")
+// )
+
+
+
+const app = document.querySelector("#app");
+const button = document.createElement("button");
+button.innerHTML = "click"
+app?.appendChild(button);
+
+// 实测在移动端中，一次点击可以收到两次信号，touchend在前，click在后，
+// 但只需要一个，这个时候只需要取最新的一个就可以了(是否有switchLatest或类似功能的操作符？？)
+let count = 1;
+merge(fromEvent(button, "click"), fromEvent(button, "touchend"), 1).subscribe(() => {
+    button.innerHTML = (count++).toString();
+})
