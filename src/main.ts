@@ -9,4 +9,6 @@
 // import "./static-operators/fromEvent";
 // import "./static-operators/ajax";
 // import "./static-operators/repeatWhen";
-import "./static-operators/defer"
+// import "./static-operators/defer"
+// import "./combination-operators/concat";
+import "./combination-operators/merge"
