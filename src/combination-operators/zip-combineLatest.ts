@@ -82,7 +82,7 @@ const fakeCombineLatest = (...args: any[]) => {
 //     () => console.log("done")
 // )
 
-// combineLatest 小缺陷：
+// combineLatest 小缺陷(glitch)：
 // 对于同时到来的两个或多个数据，本应该产生一个输出，实际结果却产生了两个或多个，
 // 因为多个数据源同时产生数据，同时产生多个宏任务，因此也就无法使用微任务解决这个缺陷（个人猜测）
 fakeCombineLatest(

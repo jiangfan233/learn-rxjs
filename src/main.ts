@@ -12,4 +12,5 @@
 // import "./static-operators/defer"
 // import "./combination-operators/concat";
 // import "./combination-operators/merge";
-import "./combination-operators/zip-combineLatest"
+// import "./combination-operators/zip-combineLatest";
+import "./combination-operators/withLatestFrom"

@@ -59,4 +59,13 @@ combineLatest 仅仅在第一次吐出数据集合的时候等待所有数据源
     对于同时到来的两个或多个数据，本应该产生一个输出，实际结果却产生了两个或多个，<br/>
     因为多个数据源同时产生数据，同时产生多个宏任务，因此也就无法使用微任务解决这个缺陷（个人猜测）<br/>
     </li>
+    <li>
+        withLatestFrom 解决了zip、combineLatest中的多重继承问题（glitch）<br/>
+        glitch 问题的根源在于多个Observable同时有数据到来时都会向下游吐出数据，因此会出现同一个时刻吐出多个数据的情况<br/>
+        withLatestFrom解决方式：<br/>
+        1、提供一个控制者Observble作为Controller，其他Observable作为从属仅提供数据（不向下游提供数据）<br/>
+        2、controller向下游吐出数据（因此也把Subscription提供给下游）<br/>
+        3、controller自身有数据时会检查 从属者是否已经提供数据（而不管数据何时提供的）<br/>
+        上面三点决定了在订阅controller之前势必要先订阅从属者最后订阅controller，也就给了当同时多个Observable吐出数据时从属者更新数据的机会
+    </li>
 </ul>
