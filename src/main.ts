@@ -13,4 +13,7 @@
 // import "./combination-operators/concat";
 // import "./combination-operators/merge";
 // import "./combination-operators/zip-combineLatest";
-import "./combination-operators/withLatestFrom"
+// import "./combination-operators/withLatestFrom";
+// import "./combination-operators/race";
+// import "./combination-operators/startWith";
+import "./combination-operators/forkjoin";

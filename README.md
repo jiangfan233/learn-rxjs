@@ -68,4 +68,13 @@ combineLatest 仅仅在第一次吐出数据集合的时候等待所有数据源
         3、controller自身有数据时会检查 从属者是否已经提供数据（而不管数据何时提供的）<br/>
         上面三点决定了在订阅controller之前势必要先订阅从属者最后订阅controller，也就给了当同时多个Observable吐出数据时从属者更新数据的机会
     </li>
+    <li>
+        race 第一个吐出数据Observable对象保留订阅状态，其他observable直接取消订阅；”赢者通吃“
+    </li>
+    <li>
+        startWith 直接在订阅后吐出参数，而不管observable内部shadule
+    </li>
+    <li>
+        forkjoin 等待所有bservable对象都完结（completed）时候把所有observable对象的最后一个数据组合后吐出
+    </li>
 </ul>
