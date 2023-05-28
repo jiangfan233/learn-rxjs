@@ -20,7 +20,7 @@ rxjs既实现了观察者模式又实现了迭代器模式；
 
 关于 fakeRepeatWhen(repeatWhen) 的问题：
 <ul>
-    <li>
+    <li>/
         期望：</br>
         1、controller$数据流complete的时候能够下游也能正常结束，<br/>
         2、controller$数据流complete的时候能够在重新订阅自身
@@ -77,4 +77,15 @@ combineLatest 仅仅在第一次吐出数据集合的时候等待所有数据源
     <li>
         forkjoin 等待所有bservable对象都完结（completed）时候把所有observable对象的最后一个数据组合后吐出
     </li>
+</ul>
+
+**高阶Observable**
+<ul>
+    <li>concatAll用于将多个Observable数据流首尾连接在一起</li>
+    
+</ul>
+
+**自我感想**
+<ul>
+    <li>到目前为止，自己实现的一些简单功能基本全都用到了状态变量，用非函数式实现函数式...挺讽刺的。</li>
 </ul>
