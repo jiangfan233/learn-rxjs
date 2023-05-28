@@ -17,4 +17,5 @@
 // import "./combination-operators/race";
 // import "./combination-operators/startWith";
 // import "./combination-operators/forkjoin";
-import "./high-order-observable/concatAll";
+// import "./high-order-observable/concatAll";
+import "./high-order-observable/mergeAll";

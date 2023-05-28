@@ -81,7 +81,23 @@ combineLatest 仅仅在第一次吐出数据集合的时候等待所有数据源
 
 **高阶Observable**
 <ul>
-    <li>concatAll用于将多个Observable数据流首尾连接在一起</li>
+    <li>mergeAll和concatAll都是把 Observable 对象降低一维</li>
+    <ul>
+        <li>concatAll 是按先后顺序把 子数据流 头(subscribe)尾(completed)相连，</li>
+        <li>因此</li>
+        <li>1、最后形成的数据流时间比任何一个子数据流都要长；</li>
+        <li>2、某时刻的数据只属于一个 子数据流；</li>
+        <li>3、子数据流的订阅时间可能晚于 该数据流 在下游的出现时间；</li>
+        <li>4、若中间的子数据流不 complete，后面的子数据流永远不会被订阅。</li>
+        <li>5、concatAll 可比喻为 单线程</li>
+        <li>mergeAll 是只要有子数据流在 下游 出现，就会被订阅。</li>
+        <li>因此</li>
+        <li>1、最后形成的数据流执行时间可能和 某一个子数据流 时间相同。</li>
+        <li>2、某时刻的数据可能源于多个数据流</li>
+        <li>3、子数据流在下游的出现时间和订阅时间基本一致（逻辑上时间相同）</li>
+        <li>4、所有的子数据流都会被订阅</li>
+        <li>5、mergeAll 可比喻为 并发</li>
+    </ul>
     
 </ul>
 
