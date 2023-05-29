@@ -18,4 +18,6 @@
 // import "./combination-operators/startWith";
 // import "./combination-operators/forkjoin";
 // import "./high-order-observable/concatAll";
-import "./high-order-observable/mergeAll";
+// import "./high-order-observable/mergeAll";
+// import "./high-order-observable/zipAll";
+import "./high-order-observable/conbineAll";
